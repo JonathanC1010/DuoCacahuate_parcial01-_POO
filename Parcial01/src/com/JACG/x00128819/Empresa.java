@@ -19,22 +19,25 @@ public class Empresa {
         return planilla;
     }
 
-    public void addEmpleado(Empleado nuevo){
+    public void addEmpleado(PlazaFija nuevo){
+        planilla.add(nuevo);
+        System.out.println("Se añadió con éxito");
+    }
+    public void addEmpleado(ServicioProfesional nuevo){
         planilla.add(nuevo);
         System.out.println("Se añadió con éxito");
     }
     public void quitEmpleado(String nombreEmpleado){
-
         boolean encontrado = false;
         for (int i = 0;i<planilla.size();i++){
             if (planilla.get(i).getNombre().equalsIgnoreCase(nombreEmpleado)){
                 planilla.remove(i);
                 encontrado = true;
-                System.out.println("Se borró con éxito");
+                System.out.println("Se despidió al condenado UwU");
             }
         }
         if (!encontrado){
-            System.out.println("No se encontró\n");
+            System.out.println("No se encontró");
         }
     }
 }

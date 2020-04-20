@@ -41,9 +41,7 @@ public class CalculadoraImpuestos {
     public static String mostrarTotales(){
         return "\nTotal renta: " + totalRenta +
                 "\nTotal ISSS:" + totalISSS +
-                "\nTotal AFP" + totalAFP;
+                "\nTotal AFP: " + totalAFP;
     }
 
-    public static void calcularPago() {
-    }
 }

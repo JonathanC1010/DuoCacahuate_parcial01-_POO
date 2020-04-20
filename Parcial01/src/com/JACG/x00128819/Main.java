@@ -1,7 +1,5 @@
 package com.JACG.x00128819;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -9,12 +7,15 @@ public class Main {
     static Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
-        ArrayList<Empleado> emp = new ArrayList<>();
-        Empresa empre = new Empresa("Coca cola");
-        byte op = 0;
-        String nombreEm;
+        Empresa empresa = new Empresa("Coca cola");
+        Empleado empleadoBuscar = null;
+        byte op;
+        String nombre, puesto;
+        double salario;
+        boolean seguir = false;
 
-        String menu = "1. Agregar empleado\n"+
+        String menu = "\n----------Menú----------" +
+                "1. Agregar empleado\n"+
                 "2. Despedir empleado\n"+
                 "3. Ver lista de empleados\n"+
                 "4. Calcular sueldo\n"+
@@ -23,49 +24,75 @@ public class Main {
 
         do{
             System.out.println(menu); op = in.nextByte(); in.nextLine();
+            //exception por int
 
             switch (op){
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+
                 case 1:
-                     String nombre, puesto;
-                     double salario;
 
                     System.out.println("Nombre: "); nombre = in.nextLine();
-                    System.out.println("Ingrese el nombre del uesto:\n" +
-                            "Servicio profesional / Plaza fija  "); puesto = in.nextLine();
+                    System.out.println("Ingrese el puesto:"); puesto = in.nextLine();
                     System.out.println("Salario: "); salario = in.nextDouble(); in.nextLine();
-                    if (puesto.equalsIgnoreCase("Servicio profesional")){
+                    while (!seguir){
+                        System.out.println("Ingrese tipo de empleo\n" +
+                                "1. Servicio profesional\n" +
+                                "2. Plaza fija"); op = in.nextByte(); in.nextLine();
+                                if (op>0&&op<3){
+                                    seguir = true;
+                                }
+                                else {
+                                    System.out.println("Ingrese una opción válida");
+                                }
+                    }
+                    if (op == 1){//Servicio profesional
                         int mesesContrato;
                         System.out.println("Meses contratados: "); mesesContrato = in.nextInt(); in.nextLine();
-                        emp.add(new ServicioProfesional(nombre, puesto, salario, mesesContrato));
-                    } else {
+                        empresa.addEmpleado(new ServicioProfesional(nombre, puesto, salario, mesesContrato));
+                    } else {//plaza fija
                         int extension;
                         System.out.println("Numero de telefono de su oficina: "); extension = in.nextInt(); in.nextLine();
-                        emp.add(new PlazaFija(nombre, puesto, salario, extension));
+                        empresa.addEmpleado(new PlazaFija(nombre, puesto, salario, extension));
                     }
+                    seguir = false;
                     break;
 
                 case 2:
-                    String nombreBuscar;
-                    System.out.println("Ingrese el nombre del empleado a despedir: "); nombreBuscar = in.nextLine();
-                    if (emp.removeIf(borrar-> borrar.getNombre().equals(nombreBuscar))){
-                        System.out.println("Empledo despedido");
-                    } else {
-                        System.out.println("Empleado no encontrado");
-                    }
+                    System.out.println("Empleado a despedir: "); nombre = in.nextLine();
+                    empresa.quitEmpleado(nombre);
                     break;
 
                 case 3:
-                    emp.forEach(lista -> System.out.println(lista.toString()));
+
+                    if (empresa.getPlanilla().isEmpty()){
+                        System.out.println("Debe agregar empleados primero");
+                    }else {
+                        for (Empleado i : empresa.getPlanilla()
+                        ) {
+                            System.out.println(i);
+                        }
+                    }
                     break;
 
                 case 4:
-                   CalculadoraImpuestos.calcularPago();
-                    break;
+                    if (empresa.getPlanilla().isEmpty()){
+                        System.out.println("Debe agregar empleados primero");
+                    }else{
+                        System.out.println("Calculando...");
+                        for (Empleado i : empresa.getPlanilla()
+                        ) {
+                            System.out.println("El sueldo de " + i.getNombre() + " es de $"
+                                    + CalculadoraImpuestos.calcularPago(i));
+                        }
+                    }break;
 
                 case 5:
-                    CalculadoraImpuestos.mostrarTotales();
-
-
+                    System.out.println(CalculadoraImpuestos.mostrarTotales());
+                    break;
+                default:
+                    System.out.println("Opción inválida, por favor introduzca una opción listada");
             }
 
         }while (op !=0);
